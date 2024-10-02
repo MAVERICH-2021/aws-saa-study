@@ -1,0 +1,40 @@
+#! /bin/bash
+
+set -e 
+
+# Taking an argument
+if [ -z "$1"]; then
+    echo "Kindly provide a bucket name as an argument to the command"
+    exit 1
+fi
+
+# Taking an argument 2
+if [ -z "$2"]; then
+    echo "Kindly provide a bucket name as an argument to the command"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILE_PREFIX=$2
+OUTPUT_DIR="/tmp/s3-bash-scripts"
+
+# Remove the file of they already exist
+rm -r $OUTPUT_DIR
+
+
+mkdir -p $OUTPUT_DIR
+
+NUM_FILES=$((RANDOM % 6 + 5))
+
+for ((i=1; $NUM_FILES; i++)); do
+
+    FILENAME="$OUTPUT_DIR/${FILE_PREFIX}_$i.txt"
+
+    dd if=/dev/urandom of="$FILENAME" bs=1024 count=$((RANDOM % 1024 + 1)) 2> /dev/null
+
+done
+
+echo "Done."
+
+
+tree $OUTPUT_DIR
